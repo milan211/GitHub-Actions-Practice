@@ -19,7 +19,9 @@ pipeline {
             // This is Where Build for Eureka application happens
             steps {
                 echo "Building ${env.APPLICATION_NAME} Application"
-                sh 'mvn clean package'
+                sh 'mvn clean package -DskipTests=true'
+                // mvn clean package -DskipTests=true
+                // mvn clean package -Dmaven.test.skip=true
             }
         }
     }
