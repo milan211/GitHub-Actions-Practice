@@ -25,10 +25,22 @@ pipeline {
                 archive 'target/*.jar'
             }
         }
-        stage ('Unit Tests'){
+        // stage ('Unit Tests'){
+        //     steps {
+        //         echo "****************** Performing Unit tests for ${env.APPLICATION_NAME} Application ******************"
+        //         sh 'mvn test'
+        //     }
+        // }
+
+        stage ('SonarQube'){
             steps {
-                echo "****************** Performing Unit tests for ${env.APPLICATION_NAME} Application ******************"
-                sh 'mvn test'
+                sh """
+                echo "Starting Sonar Scan"
+                mvn sonar:sonar \
+                    -Dsonar.projectKey=i27-eureka \
+                    -Dsonar.host.url=http://34.41.182.12:9000 \
+                    -Dsonar.login=sqa_577b1c8f0339303219f309fb46bb5f730ce1cf65
+                """
             }
         }
     }
