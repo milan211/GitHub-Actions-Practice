@@ -12,6 +12,8 @@ pipeline {
     }
     environment {
         APPLICATION_NAME = "eureka"
+        POM_VERSION = readMavenPom().getVersion() 
+        POM_PACKAGING = readMavenPom().getPackaging()
     }
 
     stages {
@@ -50,6 +52,16 @@ pipeline {
                      waitForQualityGate abortPipeline: true
                 }
    
+            }
+        }
+        stage ('BuildFormat') {
+            steps {
+                script { // i27-eureka-0.0.1-SNAPSHOT.jar
+                  sh """
+                    echo "Testing JAR Source: i27-${env.APPLICATION_NAME}-${env.POM_VERSION}.${env.POM_PACKAGING}"
+                  """
+
+                }
             }
         }
     }
