@@ -34,13 +34,22 @@ pipeline {
 
         stage ('SonarQube'){
             steps {
-                sh """
-                echo "Starting Sonar Scan"
-                mvn sonar:sonar \
-                    -Dsonar.projectKey=i27-eureka \
-                    -Dsonar.host.url=http://34.41.182.12:9000 \
-                    -Dsonar.login=sqa_577b1c8f0339303219f309fb46bb5f730ce1cf65
-                """
+                // COde Quality needs to be implemented in this stage
+                // Before we execute or write the code, make sure sonarqube-scanner plugin is installed.
+                // sonar details are ben configured in the Manage Jenkins > system 
+                echo "****************** Starting Sonar Scans with Quality Gates ******************"
+                withSonarQubeEnv('SonarQube') { // SonarQube is the name we configured in Manage Jenkins > System > Sonarqube , it should match exactly, 
+                    sh """
+                        mvn sonar:sonar \
+                            -Dsonar.projectKey=i27-eureka \
+                            -Dsonar.host.url=http://34.41.182.12:9000 \
+                            -Dsonar.login=sqa_577b1c8f0339303219f309fb46bb5f730ce1cf65
+                    """
+                }
+                timeout (time: 2, unit: 'MINUTES') { //NANOSECONDS, SECONDS, MINUTES, HOURS, DAYS
+                     waitForQualityGate abortPipeline: true
+                }
+   
             }
         }
     }
