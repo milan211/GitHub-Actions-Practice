@@ -86,17 +86,23 @@ pipeline {
         }
         stage ('Deploy to Test Env'){
             steps {
-                dockerDeploy('tst', '6761', '8761').call()
+                script {
+                    dockerDeploy('tst', '6761', '8761').call()
+                }
             }
         }
         stage ('Deploy to Stage Env'){
             steps {
-                dockerDeploy('stg', '7761', '8761').call()
+                script {
+                    dockerDeploy('stg', '7761', '8761').call()
+                }
             }
         }
         stage ('Deploy to Prod Env'){
             steps {
-                dockerDeploy('prd', '8761', '8761').call()
+                script {
+                    dockerDeploy('prd', '8761', '8761').call()
+                }
             }
         }
     }
