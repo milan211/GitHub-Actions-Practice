@@ -90,6 +90,17 @@ pipeline {
                         // some block
                         // we will communicate to the server
                         script {
+                            try {
+                                // Stop the container 
+                                sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no '$USERNAME'@$dev_ip \"docker stop ${env.APPLICATION_NAME}-dev \""
+
+                                // Remove the Container
+                                sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no '$USERNAME'@$dev_ip \"docker rm ${env.APPLICATION_NAME}-dev \""
+
+                            }
+                            catch(err){
+                                echo "Error Caught: $err"
+                            }
                             // Command/syntax to use sshpass
                             //$ sshpass -p !4u2tryhack ssh -o StrictHostKeyChecking=no username@host.example.com
                             // Create container 
