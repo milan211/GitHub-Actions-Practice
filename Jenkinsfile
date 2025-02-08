@@ -72,7 +72,7 @@ pipeline {
         stage ('Docker Build Push') {
             steps {
                 script {
-                    dockerBuildAndPush.call()
+                    dockerBuildAndPush().call()
                 }
             }
         }
