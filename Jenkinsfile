@@ -92,7 +92,7 @@ pipeline {
                         script {
                             // Command/syntax to use sshpass
                             //$ sshpass -p !4u2tryhack ssh -o StrictHostKeyChecking=no username@host.example.com
-                            sh "sshpass -p '$PASSWORD' ssh -o StrictHostKeyChecking=no '$USERNAME'@$dev_ip "docker images""
+                            sh "sshpass -p '$PASSWORD' -v ssh -o StrictHostKeyChecking=no '$USERNAME'@$dev_ip \"docker images\""
                         }
                 }
             }
