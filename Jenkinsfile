@@ -143,6 +143,8 @@ pipeline {
                 }
  
             }
+            // a mail should trigger based on the status
+            // Jenkins url should be sent as an a email.
         }
         stage ('Deploy to Test Env'){
             when {
