@@ -139,6 +139,7 @@ pipeline {
             }
             steps {
                 script {
+                    imageValidation.call()
                     dockerDeploy('dev', '5761', '8761').call()
                 }
  
@@ -154,6 +155,7 @@ pipeline {
             }
             steps {
                 script {
+                    imageValidation.call()
                     dockerDeploy('tst', '6761', '8761').call()
                 }
             }
@@ -166,6 +168,7 @@ pipeline {
             }
             steps {
                 script {
+                    imageValidation.call()
                     dockerDeploy('stg', '7761', '8761').call()
                 }
             }
@@ -182,6 +185,32 @@ pipeline {
                 }
             }
         }
+    }
+}
+
+//App Building
+def buildApp(){
+    return {
+        echo "Building ${env.APPLICATION_NAME} Application"
+        sh 'mvn clean package -DskipTests=true'
+    }
+}
+
+
+// imageValidation
+def imageValidation() {
+    return {
+        println("******** Attemmpting to Pull the Docker Images *********")
+        try {
+            sh "docker pull ${env.DOCKER_HUB}/${env.APPLICATION_NAME}:${GIT_COMMIT}"
+            println("************* Image is Pulled Succesfully ***********")
+        }
+        catch(Exception e) {
+            println("***** OOPS, the docker images with this tag is not available in the repo, so creating the image********")
+            buildApp().call()
+            dockerBuildAndPush().call()
+        }
+
     }
 }
 
