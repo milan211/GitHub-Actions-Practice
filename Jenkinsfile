@@ -139,7 +139,7 @@ pipeline {
             }
             steps {
                 script {
-                    imageValidation.call()
+                    imageValidation().call()
                     dockerDeploy('dev', '5761', '8761').call()
                 }
  
@@ -155,7 +155,7 @@ pipeline {
             }
             steps {
                 script {
-                    imageValidation.call()
+                    imageValidation().call()
                     dockerDeploy('tst', '6761', '8761').call()
                 }
             }
@@ -168,7 +168,7 @@ pipeline {
             }
             steps {
                 script {
-                    imageValidation.call()
+                    imageValidation().call()
                     dockerDeploy('stg', '7761', '8761').call()
                 }
             }
