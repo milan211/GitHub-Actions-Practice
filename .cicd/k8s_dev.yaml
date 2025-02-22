@@ -1,0 +1,34 @@
+# Deployment file for eureka 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: i27-eureka-dev
+  labels:
+    app: i27-eureka-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: i27-eureka-dev
+  template:
+    metadata:
+      labels:
+        app: i27-eureka-dev
+    spec:
+      containers:
+      - name: i27-eureka-dev
+        image: DIT # Image tag will be replaced by shared library
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: i27-eureka-dev
+  labels:
+    app: i27-eureka-dev
+spec:
+  type: NodePort
+  ports:
+  - port: 8761
+    targetPort: 8761
+  selector:
+    app: i27-eureka-dev 
