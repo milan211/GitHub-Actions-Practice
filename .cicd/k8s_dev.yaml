@@ -6,6 +6,8 @@ metadata:
   labels:
     app: i27-eureka-dev
 spec:
+  imagePullSecrets:
+    - name: jfrog-registry
   replicas: 1
   selector:
     matchLabels:
