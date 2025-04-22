@@ -22,6 +22,7 @@ jobs:
         id: get_sha
         run: |
           echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+
   Build:
     needs: Checkout
     runs-on: ubuntu-latest
@@ -29,22 +30,43 @@ jobs:
       matrix:
         language:
           - java
+          - node
     steps:
-      - name: Chekout Code
+      - name: Checkout Code
         uses: actions/checkout@v4
 
+      # Setup Java
       - name: Setup Java
+        if: matrix.language == 'java'
         uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
+
+      # Setup Node
+      - name: Setup Node.js
+        if: matrix.language == 'node'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
 
       - name: Cache Dependencies
         uses: actions/cache@v4
         with:
           path: |
             ~/.m2
-          key: ${{runner.os}}-${{matrix.language}}-${{hashFiles('**/pom.xml')}}
-        
-      - name: Build App
+            ~/.npm
+          key: ${{ runner.os }}-${{ matrix.language }}-${{ hashFiles('**/pom.xml', '**/package-lock.json') }}
+
+      # Java build
+      - name: Build Java App
+        if: matrix.language == 'java'
         run: mvn clean package -DskipTests
+
+      # Node build
+      - name: Build Node App
+        if: matrix.language == 'node'
+        run: |
+          cd frontend
+          npm install
+          npm run build
