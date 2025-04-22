@@ -53,5 +53,4 @@ jobs:
         uses: actions/upload_artifact@v4
         with:
           name: my_artifact
-          path: target
         
