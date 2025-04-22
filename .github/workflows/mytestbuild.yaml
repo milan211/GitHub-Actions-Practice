@@ -48,9 +48,3 @@ jobs:
         
       - name: Build App
         run: mvn clean package -DskipTests
-
-      - name: Upload Build Artifacts
-        uses: actions/upload_artifact@v3
-        with:
-          name: my_artifact
-          path: target/*.jar
