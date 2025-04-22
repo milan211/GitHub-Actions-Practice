@@ -1,0 +1,53 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  Checkout:
+    runs-on: ubuntu-latest
+    outputs:
+      commit_sha: ${{ steps.get_sha.outputs.commit_sha }}
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Get Commit SHA
+        id: get_sha
+        run: |
+          echo "commit_sha=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
+  Build:
+    needs: Checkout
+    runs-on: ubuntu-latest
+    steps:
+      - name: Chekout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Cache Dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.m2
+          key: ${{runner.os}}-${{matrix.language}}-${{hashFiles('**/pom.xml')}}
+        
+      - name: Build App
+        run: mvn clean package -DskipTests
+
+      - name: Upload Build Artifacts
+        uses: actions/upload_artifact@v4
+        with:
+          name: my_artifact
+          path: dist
+        
