@@ -25,6 +25,10 @@ jobs:
   Build:
     needs: Checkout
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        language:
+          - java
     steps:
       - name: Chekout Code
         uses: actions/checkout@v4
